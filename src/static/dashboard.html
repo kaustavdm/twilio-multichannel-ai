@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Owl Airlines Live Ops</title>
+  <link rel="stylesheet" href="/static/dashboard.css" />
+</head>
+<body>
+  <header>
+    <h1>Owl Airlines Live Ops</h1>
+    <div class="muted" id="lastUpdated">Waiting for conversations</div>
+  </header>
+  <main id="dashboardShell">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <div class="label">Conversations</div>
+      </div>
+      <div id="conversationList" class="conversation-list">
+        <div class="muted empty-note">No conversations yet.</div>
+      </div>
+    </aside>
+    <section class="content">
+      <div class="section-head">
+        <h2 id="conversationTitle">Select a conversation</h2>
+        <span class="muted" id="conversationStatus"></span>
+      </div>
+      <div class="transcript" id="transcript">
+        <div class="empty">Caller and agent turns will appear here.</div>
+      </div>
+      <details class="tool-events" id="toolEventsBlock" open>
+        <summary>Tool events</summary>
+        <div class="tool-events-body" id="toolEvents">
+          <div class="muted empty-note">No tool events yet.</div>
+        </div>
+      </details>
+    </section>
+  </main>
+  <script src="/static/dashboard.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "passenger": {
+    "name": "Avery Stone",
+    "loyalty_status": "Owl Club Gold"
+  },
+  "trip": {
+    "confirmation_code": "OWL7K9",
+    "flight_number": "OA 428",
+    "origin": "SFO",
+    "destination": "JFK",
+    "departure": "tomorrow at 8:15 AM"
+  },
+  "seat": {
+    "current": "18B",
+    "available_window_seats": ["7A", "8F", "10A", "14F"],
+    "front_cabin_window_seats": ["7A", "8F", "10A"]
+  }
+}

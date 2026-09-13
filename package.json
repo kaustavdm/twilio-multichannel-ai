@@ -1,0 +1,37 @@
+{
+  "name": "twilio-multichannel-ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Multi-channel AI agents on Twilio using Twilio Agent Connect, Conversation Orchestrator, and Conversation Memory.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node src/main.js",
+    "dev": "node src/main.js",
+    "setup": "node helpers/setup/run_all.js",
+    "setup:memory-store": "node helpers/setup/1_create_memory_store.js",
+    "setup:conversation-config": "node helpers/setup/2_create_conversation_config.js",
+    "setup:intelligence-config": "node helpers/setup/3_create_intelligence_config.js",
+    "setup:attach-intelligence": "node helpers/setup/4_update_conversation_config.js",
+    "setup:cleanup": "node helpers/setup/0_cleanup.js",
+    "setup:cleanup:apply": "node helpers/setup/0_cleanup.js --yes",
+    "profile": "node helpers/profile/run_all.js",
+    "profile:trait-groups": "node helpers/profile/1_create_trait_groups.js",
+    "profile:create": "node helpers/profile/2_create_profile.js",
+    "profile:observations": "node helpers/profile/3_add_observations.js",
+    "profile:verify": "node helpers/profile/4_verify_memory.js",
+    "profile:cleanup": "node helpers/profile/0_cleanup.js",
+    "profile:cleanup:apply": "node helpers/profile/0_cleanup.js --yes"
+  },
+  "dependencies": {
+    "@fastify/static": "^8.0.0",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.1.0",
+    "openai": "^4.73.0",
+    "twilio": "^5.3.0",
+    "twilio-agent-connect": "^2.3.0"
+  }
+}
