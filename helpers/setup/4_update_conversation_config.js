@@ -10,6 +10,7 @@
 import {
   isMainModule,
   loadEnv,
+  parseTrailingIdArgs,
   prettyPrint,
   requireTwilioAuth,
   sleep,
@@ -110,13 +111,7 @@ if (isMainModule(import.meta.url)) {
   loadEnv();
   requireTwilioAuth();
 
-  const [, , argA, argB] = process.argv;
-  const options = argB
-    ? { conversationConfigId: argA, intelligenceConfigId: argB }
-    : argA
-      ? { intelligenceConfigId: argA }
-      : {};
-
+  const options = parseTrailingIdArgs(process.argv, 'conversationConfigId', 'intelligenceConfigId');
   const result = await attachIntelligenceConfig(options);
   console.log('');
   console.log('Conversation Configuration linked to Intelligence:');

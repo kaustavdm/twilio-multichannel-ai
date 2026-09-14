@@ -11,6 +11,7 @@
 //   node helpers/profile/0_cleanup.js --yes all <TWILIO_MEMORY_STORE_ID> <TWILIO_MEMORY_PROFILE_ID>
 
 import {
+  findInListing,
   loadEnv,
   prettyPrint,
   requireTwilioAuth,
@@ -85,24 +86,10 @@ async function deleteProfile({ memoryStoreId, profileId, dryRun }) {
 
 async function findTraitGroupId(baseUrl, name) {
   const listing = await twilioRequest('GET', baseUrl);
-  // The API may return the list under different envelope keys. Walk the
-  // response looking for the first object whose displayName or name matches.
-  const seen = [];
-  const visit = (value) => {
-    if (!value) return;
-    if (Array.isArray(value)) {
-      for (const item of value) visit(item);
-      return;
-    }
-    if (typeof value !== 'object') return;
-    if (value.displayName === name || value.name === name) {
-      seen.push(value.id || value.sid || value.uniqueName);
-      return;
-    }
-    for (const v of Object.values(value)) visit(v);
-  };
-  visit(listing);
-  return seen.find(Boolean) || null;
+  // The API may return the list under different envelope keys, so
+  // findInListing walks the whole response looking for a match.
+  const matches = findInListing(listing, (v) => v.displayName === name || v.name === name);
+  return matches.map((v) => v.id || v.sid || v.uniqueName).find(Boolean) || null;
 }
 
 async function deleteTraitGroup({ baseUrl, name, dryRun }) {

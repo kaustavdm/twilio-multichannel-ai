@@ -6,6 +6,7 @@
 //   npm run profile:trait-groups
 
 import {
+  findInListing,
   isAlreadyExistsError,
   isMainModule,
   loadEnv,
@@ -37,22 +38,8 @@ const TRAVEL_BODY = {
 
 async function findExistingTraitGroup(url, name) {
   const listing = await twilioRequest('GET', url);
-  const found = [];
-  const visit = (value) => {
-    if (!value) return;
-    if (Array.isArray(value)) {
-      for (const item of value) visit(item);
-      return;
-    }
-    if (typeof value !== 'object') return;
-    if (value.displayName === name || value.name === name) {
-      found.push(value);
-      return;
-    }
-    for (const v of Object.values(value)) visit(v);
-  };
-  visit(listing);
-  return found[0] || null;
+  const [match] = findInListing(listing, (v) => v.displayName === name || v.name === name);
+  return match || null;
 }
 
 async function createTraitGroup(url, name, body) {

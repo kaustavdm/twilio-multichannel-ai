@@ -15,8 +15,6 @@ function el(tag, className, text) {
 }
 
 function statusLabel(status) {
-  if (status === 'ended') return 'ended';
-  if (status === 'active') return 'active';
   return status || 'active';
 }
 

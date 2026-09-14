@@ -9,6 +9,7 @@
 import {
   isMainModule,
   loadEnv,
+  parseTrailingIdArgs,
   prettyPrint,
   requireEnv,
   requireTwilioAuth,
@@ -58,11 +59,6 @@ export async function verifyPassengerMemory({ memoryStoreId, profileId } = {}) {
 if (isMainModule(import.meta.url)) {
   loadEnv();
   requireTwilioAuth();
-  const [, , argA, argB] = process.argv;
-  const options = argB
-    ? { memoryStoreId: argA, profileId: argB }
-    : argA
-      ? { profileId: argA }
-      : {};
+  const options = parseTrailingIdArgs(process.argv, 'memoryStoreId', 'profileId');
   await verifyPassengerMemory(options);
 }

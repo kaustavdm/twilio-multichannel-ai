@@ -9,6 +9,7 @@
 import {
   isMainModule,
   loadEnv,
+  parseTrailingIdArgs,
   prettyPrint,
   requireEnv,
   requireTwilioAuth,
@@ -55,12 +56,7 @@ export async function addPassengerObservations({ memoryStoreId, profileId } = {}
 if (isMainModule(import.meta.url)) {
   loadEnv();
   requireTwilioAuth();
-  const [, , argA, argB] = process.argv;
-  const options = argB
-    ? { memoryStoreId: argA, profileId: argB }
-    : argA
-      ? { profileId: argA }
-      : {};
+  const options = parseTrailingIdArgs(process.argv, 'memoryStoreId', 'profileId');
   const { profileId } = await addPassengerObservations(options);
   console.log('Observations added for:');
   console.log(`TWILIO_MEMORY_PROFILE_ID=${profileId}`);

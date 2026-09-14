@@ -56,7 +56,7 @@ export function getTwilioClient() {
 // Performs a JSON request against a Twilio API using the twilio SDK's
 // underlying HTTP client. Absolute URLs are supported (needed for the
 // memory/intelligence/conversations control-plane hosts).
-export async function twilioRequest(method, url, body = null) {
+export async function twilioRequest(method, url, payload = null) {
   const client = getTwilioClient();
   const opts = {
     method,
@@ -66,8 +66,8 @@ export async function twilioRequest(method, url, body = null) {
       Accept: 'application/json',
     },
   };
-  if (body !== null && body !== undefined) {
-    opts.data = body;
+  if (payload !== null && payload !== undefined) {
+    opts.data = payload;
   }
 
   let response;
@@ -82,15 +82,15 @@ export async function twilioRequest(method, url, body = null) {
     );
   }
 
-  const body_ = response.body;
-  if (typeof body_ === 'string') {
+  const { body } = response;
+  if (typeof body === 'string') {
     try {
-      return JSON.parse(body_);
+      return JSON.parse(body);
     } catch {
-      return body_;
+      return body;
     }
   }
-  return body_;
+  return body;
 }
 
 export function extractResourceId(response) {
@@ -102,6 +102,33 @@ export function extractResourceId(response) {
     response.id ||
     null
   );
+}
+
+// Recursively walks an API listing of unknown shape (the envelope key
+// varies by service) and collects every object matching `predicate`,
+// depth-first. Used to locate a resource by display name when a listing
+// doesn't expose a predictable path to its items.
+export function findInListing(listing, predicate) {
+  const matches = [];
+  const visit = (value) => {
+    if (!value) return;
+    if (Array.isArray(value)) return value.forEach(visit);
+    if (typeof value !== 'object') return;
+    if (predicate(value)) return matches.push(value);
+    Object.values(value).forEach(visit);
+  };
+  visit(listing);
+  return matches;
+}
+
+// Parses 0-2 trailing positional CLI args into a named options object.
+// A single arg always maps to `secondaryKey` (the more specific id), since
+// scripts are called either `<id>` or `<parentId> <id>`.
+export function parseTrailingIdArgs(argv, primaryKey, secondaryKey) {
+  const [, , argA, argB] = argv;
+  if (argB) return { [primaryKey]: argA, [secondaryKey]: argB };
+  if (argA) return { [secondaryKey]: argA };
+  return {};
 }
 
 export function sleep(ms) {
